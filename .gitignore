@@ -1,0 +1,107 @@
+# ====================== ROOT IGNORE ======================
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# ====================== FRONTEND (Next.js) ======================
+
+# Next.js build output
+Frontend/.next/
+Frontend/out/
+
+# Node modules
+Frontend/node_modules/
+Frontend/.pnp
+Frontend/.pnp.js
+
+# Dependency directories
+Frontend/.yarn/
+
+# Production builds
+Frontend/build/
+Frontend/dist/
+
+# Debug
+Frontend/.turbo/
+
+# Vercel
+Frontend/.vercel/
+
+# TypeScript cache
+Frontend/*.tsbuildinfo
+
+# ====================== BACKEND (Spring Boot) ======================
+
+# Maven
+Backend/target/
+Backend/.mvn/wrapper/maven-wrapper.jar
+
+# Gradle (nếu sau này dùng)
+Backend/build/
+Backend/.gradle/
+
+# Spring Boot specific
+Backend/*.jar
+Backend/*.war
+Backend/*.log
+
+# Database files (nếu có H2, SQLite...)
+Backend/*.db
+Backend/*.trace.db
+
+# Temporary files
+Backend/.tmp/
+Backend/.temp/
+
+# IntelliJ / Eclipse
+Backend/.settings/
+Backend/.classpath
+Backend/.project
+
+# ====================== COMMON ======================
+
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Temporary folders
+tmp/
+temp/
+
+# Git
+.gitignore.backup
