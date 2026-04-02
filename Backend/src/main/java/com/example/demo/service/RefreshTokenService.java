@@ -56,6 +56,17 @@ public class RefreshTokenService {
         return refreshTokenRepository.existsByUserAndRevokedFalseAndExpiryDateAfter(user, Instant.now());
     }
 
+    /**
+     * Revokes all refresh tokens belonging to the given user.
+     * Used when the user logs in again after the frontend dropped the session without calling /logout.
+     *
+     * @param user the user whose tokens should be revoked
+     */
+    @Transactional
+    public void revokeAllByUser(User user) {
+        refreshTokenRepository.deleteByUser(user);
+    }
+
     @Transactional
     public void revokeToken(RefreshToken token) {
         token.setRevoked(true);

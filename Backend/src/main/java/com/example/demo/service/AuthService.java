@@ -48,13 +48,6 @@ public class AuthService {
             return new LoginResponse(false, "Tài khoản chưa có mật khẩu. Liên hệ admin!", null, null, null);
         }
 
-        // Check if user already has an active session
-        if (refreshTokenService.hasActiveSession(user)) {
-            return new LoginResponse(false,
-                    "Tài khoản đang được sử dụng bởi người dùng khác. Vui lòng đăng xuất trước.",
-                    null, null, null);
-        }
-
         boolean matched;
         if (storedPassword.startsWith("$2")) {
             // Password đã được hash BCrypt — so sánh bình thường
@@ -71,6 +64,12 @@ public class AuthService {
 
         if (!matched) {
             return new LoginResponse(false, "Mật khẩu không đúng", null, null, null);
+        }
+
+        // Password correct — if another session exists, revoke it and let this login proceed.
+        // This handles the case where the frontend expired/cleared tokens without calling /logout.
+        if (refreshTokenService.hasActiveSession(user)) {
+            refreshTokenService.revokeAllByUser(user);
         }
 
         String role = (user.getPermission() != null) ? user.getPermission().getName() : "guest";
