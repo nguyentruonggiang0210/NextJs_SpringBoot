@@ -1,75 +1,73 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<UserResponseDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-
-        return users.stream()
+        return userRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    // Hàm chuyển Entity → DTO + generate GUID
-    private UserResponseDTO convertToDTO(User user) {
+    public Optional<UserResponseDTO> findById(Long id) {
+        return userRepository.findById(id).map(this::convertToDTO);
+    }
+
+    /** Tạo user mới — password BCrypt, permission bỏ qua (không cho client tự set). */
+    public User createUser(User user) {
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        user.setPermission(null); // chặn privilege escalation
+        return userRepository.save(user);
+    }
+
+    /** Cập nhật name/email/phone, không thay đổi password và permission. */
+    public Optional<UserResponseDTO> updateUser(Long id, User userDetails) {
+        return userRepository.findById(id).map(existing -> {
+            existing.setName(userDetails.getName());
+            existing.setEmail(userDetails.getEmail());
+            existing.setPhone(userDetails.getPhone());
+            return convertToDTO(userRepository.save(existing));
+        });
+    }
+
+    public boolean deleteUser(Long id) {
+        if (!userRepository.existsById(id)) return false;
+        userRepository.deleteById(id);
+        return true;
+    }
+
+    // Entity → DTO, password không trả về client
+    public UserResponseDTO convertToDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
-        dto.setPassword(user.getPassword());
-
-        // Generate GUID ngẫu nhiên mỗi lần gọi API
+        dto.setPassword(null);
         dto.setCode(UUID.randomUUID().toString());
-
+        dto.setPermissionName(
+                user.getPermission() != null ? user.getPermission().getName() : null);
         return dto;
-    }
-
-    // === PHẦN ĐĂNG NHẬP MỚI ===
-   public LoginResponse login(LoginRequest request) {
-        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-            return new LoginResponse(false, "Mật khẩu không được để trống", null, null, null);
-        }
-
-        Optional<User> optionalUser = userRepository.findById(request.getId());
-
-        if (optionalUser.isEmpty()) {
-            return new LoginResponse(false, "ID không tồn tại", null, null, null);
-        }
-
-        User user = optionalUser.get();
-
-        // Kiểm tra password an toàn hơn (tránh NullPointerException)
-        String storedPassword = user.getPassword();
-        if (storedPassword == null || storedPassword.trim().isEmpty()) {
-            return new LoginResponse(false, "Tài khoản chưa có mật khẩu. Liên hệ admin!", null, null, null);
-        }
-
-        // So sánh mật khẩu (hiện tại vẫn là plaintext)
-        if (!storedPassword.equals(request.getPassword())) {
-            return new LoginResponse(false, "Mật khẩu không đúng", null, null, null);
-        }
-
-        // Đăng nhập thành công
-        UserResponseDTO userDTO = convertToDTO(user);
-        String token = UUID.randomUUID().toString();
-
-        return new LoginResponse(true, "Đăng nhập thành công", token, null, userDTO);
     }
 }

@@ -9,19 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Giá trị: "guest" | "member" | "admin"
+    @Column(nullable = false, unique = true)
     private String name;
-    private String email;
-    private String phone;
-    private String password;
-
-    // FK tới bảng permission — bạn thêm cột permission_id vào SQLite thủ công
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
 }

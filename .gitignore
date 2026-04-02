@@ -37,6 +37,9 @@ Frontend/node_modules/
 Frontend/.pnp
 Frontend/.pnp.js
 
+# Lock files
+Frontend/package-lock.json
+
 # Dependency directories
 Frontend/.yarn/
 

@@ -18,5 +18,7 @@ public class UserResponseDTO {
     private String password;
 
     // Trường GUID sẽ được generate động
-    private String code;        // hoặc UUID code;
+    private String code;
+
+    private String permissionName; // "guest" | "member" | "admin"
 }
