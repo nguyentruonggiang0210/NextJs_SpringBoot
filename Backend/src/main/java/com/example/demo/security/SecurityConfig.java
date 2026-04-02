@@ -37,6 +37,8 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     // Allow WebSocket upgrade handshake (STOMP auth is handled in-channel)
                     .requestMatchers("/ws/**").permitAll()
+                    // GraphQL endpoint — JWT checked inside the resolver layer
+                    .requestMatchers("/graphql", "/graphiql/**").permitAll()
                     // Chỉ member và admin mới được vào /api/users
                     .requestMatchers("/api/users/**").hasAnyAuthority("member", "admin")
                     .anyRequest().authenticated()

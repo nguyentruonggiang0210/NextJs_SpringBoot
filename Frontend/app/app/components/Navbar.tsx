@@ -14,6 +14,7 @@ const authItems = [
   { label: "Trang chủ", href: "/" },
   { label: "Người dùng", href: "/users" },
   { label: "Chat", href: "/chat" },
+  { label: "Telemetry", href: "/telemetry" },
 ];
 
 export default function Navbar() {

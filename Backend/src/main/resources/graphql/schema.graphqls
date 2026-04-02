@@ -1,0 +1,80 @@
+type Query {
+    allTelemetry: [VehicleTelemetry!]!
+    telemetryById(deviceId: ID!): VehicleTelemetry
+    telemetryPage(offset: Int!, limit: Int!): TelemetryPage!
+}
+
+type TelemetryPage {
+    items: [VehicleTelemetry!]!
+    total: Int!
+    hasMore: Boolean!
+}
+
+type VehicleTelemetry {
+    # GROUP 1: HARDWARE IDENTITY
+    deviceId: ID!
+    vinNumber: String!
+    plateNumber: String
+    firmwareVersion: String
+    hardwareSerial: String
+
+    # GROUP 2: REAL-TIME LOCATION
+    lastLatitude: Float
+    lastLongitude: Float
+    altitude: Float
+    speedKmh: Float
+    headingDegree: Int
+    gpsSatelliteCount: Int
+    gpsSignalStrength: Int
+    currentCity: String
+    currentCountry: String
+    isRoaming: Int
+
+    # GROUP 3: ENGINE & FUEL METRICS
+    engineRpm: Int
+    engineLoadPercent: Float
+    coolantTemperature: Float
+    fuelLevelPercent: Float
+    fuelConsumptionRate: Float
+    oilPressure: Float
+    batteryVoltage: Float
+    odometerKm: Float
+    tripDistanceKm: Float
+    engineRuntimeHours: Float
+
+    # GROUP 4: SAFETY & SENSORS
+    isEngineOn: Int
+    isMoving: Int
+    isOverspeeding: Int
+    brakePedalStatus: Int
+    seatbeltDriverLocked: Int
+    tirePressureFl: Float
+    tirePressureFr: Float
+    tirePressureRl: Float
+    tirePressureRr: Float
+    impactSensorGForce: Float
+
+    # GROUP 5: ENVIRONMENTAL DATA
+    outsideTemp: Float
+    cabinTemp: Float
+    humidityPercent: Float
+    airQualityIndex: Int
+    rainSensorActive: Int
+    headlightStatus: String
+    doorFlOpen: Int
+    doorFrOpen: Int
+    doorRlOpen: Int
+    doorRrOpen: Int
+
+    # GROUP 6: LOGGING & DIAGNOSTICS
+    lastTransmissionAt: String
+    createdAt: String
+    updatedAt: String
+    errorCodeCount: Int
+    lastErrorCode: String
+    emergencyButtonPressed: Int
+    maintenanceDueKm: Float
+    cellularNetworkType: String
+    simIccid: String
+    isActiveMonitoring: Int
+}

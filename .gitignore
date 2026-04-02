@@ -37,6 +37,12 @@ Frontend/node_modules/
 Frontend/.pnp
 Frontend/.pnp.js
 
+# Seed / dev scripts
+Backend/seed_telemetry.js
+Backend/node_modules/
+Backend/package.json
+Backend/package-lock.json
+
 # Lock files
 Frontend/package-lock.json
 

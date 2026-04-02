@@ -1,0 +1,67 @@
+-- Sample telemetry data for behicle_telemetry_master table
+-- Hibernate's ddl-auto=update will create the table; this file seeds initial rows.
+-- Spring Boot runs this only when spring.sql.init.mode=always and the INSERT is safe to re-run.
+
+INSERT OR IGNORE INTO behicle_telemetry_master (
+    vin_number, plate_number, firmware_version, hardware_serial,
+    last_latitude, last_longitude, altitude, speed_kmh, heading_degree,
+    gps_satellite_count, gps_signal_strength, current_city, current_country, is_roaming,
+    engine_rpm, engine_load_percent, coolant_temperature, fuel_level_percent,
+    fuel_consumption_rate, oil_pressure, battery_voltage, odometer_km,
+    trip_distance_km, engine_runtime_hours,
+    is_engine_on, is_moving, is_overspeeding, brake_pedal_status, seatbelt_driver_locked,
+    tire_pressure_fl, tire_pressure_fr, tire_pressure_rl, tire_pressure_rr, impact_sensor_g_force,
+    outside_temp, cabin_temp, humidity_percent, air_quality_index, rain_sensor_active,
+    headlight_status, door_fl_open, door_fr_open, door_rl_open, door_rr_open,
+    last_transmission_at, created_at, updated_at, error_code_count, last_error_code,
+    emergency_button_pressed, maintenance_due_km, cellular_network_type, sim_iccid, is_active_monitoring
+) VALUES
+    ('VIN1A2B3C4D5E6F7G8H', '51A-12345', 'v2.1.0', 'HW-001-SN',
+     10.7769, 106.7009, 12.5, 45.0, 90, 8, 85, 'Ho Chi Minh City', 'Vietnam', 0,
+     1800, 42.5, 91.0, 78.0, 7.2, 3.5, 12.4, 52340.5, 120.3, 1230.5,
+     1, 1, 0, 0, 1,
+     32.1, 32.0, 31.8, 31.9, 0.1,
+     32.0, 24.0, 65.0, 48, 0,
+     'Low', 0, 0, 0, 0,
+     datetime('now', '-5 minutes'), datetime('now', '-90 days'), datetime('now', '-5 minutes'),
+     0, NULL, 0, 60000.0, '4G', 'SIM-ICC-001', 1),
+
+    ('VIN2B3C4D5E6F7G8H9I', '29A-54321', 'v2.0.5', 'HW-002-SN',
+     21.0285, 105.8542, 20.0, 0.0, 0, 6, 72, 'Hanoi', 'Vietnam', 0,
+     0, 0.0, 88.0, 55.0, 0.0, 0.0, 12.1, 105200.0, 0.0, 3400.0,
+     0, 0, 0, 0, 0,
+     31.5, 31.5, 31.0, 31.2, 0.0,
+     28.0, 28.0, 70.0, 55, 1,
+     'Off', 0, 1, 0, 0,
+     datetime('now', '-2 minutes'), datetime('now', '-180 days'), datetime('now', '-2 minutes'),
+     2, 'P0300', 0, 10000.0, '5G', 'SIM-ICC-002', 1),
+
+    ('VIN3C4D5E6F7G8H9I0J', '43A-67890', 'v2.1.2', 'HW-003-SN',
+     16.0544, 108.2022, 5.0, 88.5, 270, 10, 92, 'Da Nang', 'Vietnam', 0,
+     3200, 78.0, 95.0, 22.0, 12.1, 3.8, 12.8, 78900.0, 340.7, 2100.0,
+     1, 1, 1, 0, 1,
+     33.0, 33.2, 32.5, 32.8, 0.2,
+     36.0, 22.0, 55.0, 40, 0,
+     'High', 0, 0, 0, 0,
+     datetime('now', '-1 minutes'), datetime('now', '-60 days'), datetime('now', '-1 minutes'),
+     1, 'P0171', 0, 5000.0, 'LTE', 'SIM-ICC-003', 1),
+
+    ('VIN4D5E6F7G8H9I0J1K', '92A-11111', 'v1.9.8', 'HW-004-SN',
+     10.3460, 107.0843, 8.0, 35.2, 180, 7, 68, 'Vung Tau', 'Vietnam', 0,
+     1500, 35.0, 89.0, 91.0, 6.0, 3.2, 11.9, 23100.0, 45.0, 520.0,
+     1, 1, 0, 1, 1,
+     30.8, 30.9, 30.5, 30.7, 0.0,
+     34.0, 25.0, 60.0, 52, 0,
+     'Low', 0, 0, 0, 0,
+     datetime('now', '-10 minutes'), datetime('now', '-30 days'), datetime('now', '-10 minutes'),
+     0, NULL, 0, 45000.0, '4G', 'SIM-ICC-004', 1),
+
+    ('VIN5E6F7G8H9I0J1K2L', '75A-99999', 'v2.1.0', 'HW-005-SN',
+     10.9804, 108.2507, 200.0, 120.8, 45, 9, 88, 'Phan Thiet', 'Vietnam', 0,
+     4100, 85.0, 98.0, 15.0, 15.3, 4.0, 13.1, 198760.0, 620.4, 7800.0,
+     1, 1, 1, 0, 1,
+     28.5, 29.0, 27.8, 28.2, 0.5,
+     38.0, 23.0, 45.0, 35, 0,
+     'High', 0, 0, 0, 0,
+     datetime('now', '-30 seconds'), datetime('now', '-365 days'), datetime('now', '-30 seconds'),
+     5, 'P0420', 0, 500.0, '5G', 'SIM-ICC-005', 1);
