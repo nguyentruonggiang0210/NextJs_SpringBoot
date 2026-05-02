@@ -14,6 +14,7 @@ const authItems = [
   { label: "Trang chủ", href: "/" },
   { label: "Người dùng", href: "/users" },
   { label: "Chat", href: "/chat" },
+  { label: "Auto Pattern", href: "/auto-pattern" },
   { label: "Telemetry", href: "/telemetry" },
 ];
 
