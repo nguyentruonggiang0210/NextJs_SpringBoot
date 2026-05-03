@@ -7,6 +7,7 @@ import { API_BASE } from "../../lib/config";
 
 const guestItems = [
   { label: "Trang chủ", href: "/" },
+  { label: "Auto Pattern", href: "/auto-pattern" },
   { label: "Đăng nhập", href: "/login" },
 ];
 

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,8 +44,12 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                     // Auto pattern endpoint - public access
                     .requestMatchers("/api/auto-pattern/**").permitAll()
-                    // Chỉ member và admin mới được vào /api/users
-                    .requestMatchers("/api/users/**").hasAnyAuthority("member", "admin")
+                    // Cho phép tạo user mà không cần quyền (phải đặt trước rule chung)
+                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    // Chỉ member và admin mới được vào các endpoint khác của /api/users
+                    .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("member", "admin")
+                    .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("member", "admin")
+                    .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority("member", "admin")
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -69,18 +69,18 @@ export default function AutoPatternPage() {
   const clientRef = useRef<Client | null>(null);
 
   // ---------------------------------------------------------------------------
-  // Auth check
+  // Auth check (optional for guest access)
   // ---------------------------------------------------------------------------
   useEffect(() => {
     const raw = localStorage.getItem("user");
     const token = localStorage.getItem("accessToken") ?? "";
-    if (!raw || !token) {
-      window.location.href = "/login";
-      return;
+    
+    if (raw && token) {
+      const user: UserInfo = JSON.parse(raw);
+      setMe(user);
+      setAccessToken(token);
     }
-    const user: UserInfo = JSON.parse(raw);
-    setMe(user);
-    setAccessToken(token);
+    // Allow access without authentication
   }, []);
 
   // ---------------------------------------------------------------------------
@@ -138,7 +138,13 @@ export default function AutoPatternPage() {
   // ---------------------------------------------------------------------------
   const handleTrigger = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!me || loading) return;
+    if (!me || loading) {
+      if (!me) {
+        alert("Vui lòng đăng nhập để sử dụng tính năng này");
+        window.location.href = "/login";
+      }
+      return;
+    }
 
     setLoading(true);
 
@@ -187,7 +193,7 @@ export default function AutoPatternPage() {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-  if (!me) return null;
+  // Allow rendering without authentication for guest access
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black p-8">

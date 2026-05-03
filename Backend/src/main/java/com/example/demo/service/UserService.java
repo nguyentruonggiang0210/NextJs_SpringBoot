@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,21 +35,35 @@ public class UserService {
 
     /** Tạo user mới — password BCrypt, permission bỏ qua (không cho client tự set). */
     public User createUser(User user) {
-        if (user.getPassword() != null && !user.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            // Reset ID để Hibernate tự động sinh (tránh conflict với existing user)
+            user.setId(null);
+            user.setVersion(null);
+            
+            if (user.getPassword() != null && !user.getPassword().isBlank()) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            user.setPermission(null); // chặn privilege escalation
+            return userRepository.save(user);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            // Handle optimistic locking conflict
+            throw new RuntimeException("User đang được cập nhật bởi người khác. Vui lòng thử lại.", e);
         }
-        user.setPermission(null); // chặn privilege escalation
-        return userRepository.save(user);
     }
 
     /** Cập nhật name/email/phone, không thay đổi password và permission. */
     public Optional<UserResponseDTO> updateUser(Long id, User userDetails) {
-        return userRepository.findById(id).map(existing -> {
-            existing.setName(userDetails.getName());
-            existing.setEmail(userDetails.getEmail());
-            existing.setPhone(userDetails.getPhone());
-            return convertToDTO(userRepository.save(existing));
-        });
+        try {
+            return userRepository.findById(id).map(existing -> {
+                existing.setName(userDetails.getName());
+                existing.setEmail(userDetails.getEmail());
+                existing.setPhone(userDetails.getPhone());
+                return convertToDTO(userRepository.save(existing));
+            });
+        } catch (ObjectOptimisticLockingFailureException e) {
+            // Handle optimistic locking conflict
+            throw new RuntimeException("User đang được cập nhật bởi người khác. Vui lòng thử lại.", e);
+        }
     }
 
     public boolean deleteUser(Long id) {
